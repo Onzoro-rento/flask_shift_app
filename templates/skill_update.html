@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block head %}<title>スキル管理</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 10px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    
+
+
+
+
+
+</style>
+{% endblock %}
+{% block title %} - スキル管理{% endblock %}
+{% block content %}
+
+ <h2>{{user.name}}のスキル管理</h2>
+ <br>
+ <p>各ポジションの評価: 0: まったく, 1: 少し, 2: まあまあ, 3: マスター</p>
+ <form method = "post" action="{{ url_for('skill_update',user_id = user.id)}}">
+    <div class="mb-3">
+        <label for="menba" class="form-label">麺場</label>
+        <input type="number" class="form-control" id="menba" name="menba" required min="0" max="3" step="1" value="{{user.menba}}">
+    </div>
+    <div class="mb-3">
+        <label for="yakiba" class="form-label">焼き場</label>
+        <input type="number" class="form-control" id="yakiba" name="yakiba" required min="0" max="3" step="1"value="{{user.yakiba}}">
+    </div>
+    <div class="mb-3">
+        <label for="checkout" class="form-label">レジ</label>
+        <input type="number" class="form-control" id="checkout" name="checkout" required min="0" max="3" step="1"value="{{user.checkout}}">
+    </div>
+    <div class="mb-3">
+        <label for="sikomi" class="form-label">仕込み</label>
+        <input type="number"  class="form-control" id="sikomi" name="sikomi" required min="0" max="3" step="1"value="{{user.sikomi}}">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">提出</button>
+    
+ </form>      
+   
+    
+    
+        
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block head %}<title>シフト一覧</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 10px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+    th:nth-child(1), td:nth-child(1) { /* 従業員コード */
+        width: 20%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { /* 年齢 */
+        width: 20%;
+    }
+    th:nth-child(4), td:nth-child(3) { /* 削除ボタン */
+        width: 20%;
+    }
+</style>
+{% endblock %}
+
+{% block title %} - メンバ一{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>名前</th>
+        <th>麺場</th>
+        <th>焼き場</th>
+        <th>レジ</th>
+        <th>仕込み</th>
+    {% if current_user.is_authenticated %}
+
+        <th>操作</th>
+    {% endif %}
+
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.menba}}</td>
+        <td>{{ user.yakiba }}</td>
+        <td>{{ user.checkout}}</td>
+        <td>{{ user.sikomi }}</td>
+    {% if current_user.is_authenticated %}
+        {% if current_user.administrator == "1" %}
+        <td>
+        <a href="{{url_for('skill_update',user_id = user.id)}}"  class = "btn btn-outline-success me-2">スキルを変更</a>
+        </form>
+        
+        </td>
+        {% endif %}
+    {% endif %}    
+
+    </tr>
+        {% else %}
+    <tr>
+        <td colspan="4">登録されたユーザーはいません。</td>
+    </tr>
+    {% endfor %}
+</table>
+<p class="mt-3">※ 各ポジションの評価: 0: まったく, 1: 少し, 2: まあまあ, 3: マスター</p>
+
+{% endblock %}

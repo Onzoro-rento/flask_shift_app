@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block head %}<title>シフト一覧</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 10px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+    th:nth-child(1), td:nth-child(1) { /* 従業員コード */
+        width: 20%;
+    }
+
+    th:nth-child(3), td:nth-child(3) { /* 年齢 */
+        width: 20%;
+    }
+    th:nth-child(4), td:nth-child(3) { /* 削除ボタン */
+        width: 20%;
+    }
+</style>
+{% endblock %}
+
+{% block title %} - メンバ一{% endblock %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>従業員コード</th>
+        <th>名前</th>
+        <th>年齢</th>
+    {% if current_user.is_authenticated %}
+
+        <th>操作</th>
+    {% endif %}
+
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.code }}</td>
+        <td>{{ user.name}}</td>
+        <td>{{ user.age or '未設定' }}</td>
+    {% if current_user.is_authenticated %}
+        {% if current_user.administrator == "1" %}
+        <td>
+        {% if user.administrator == "0" %}
+        <a href="{{url_for('update_user',user_id = user.id)}}" onclick ="return confirm('本当に管理者にしますか？')" class = "btn btn-outline-success me-2">管理者に変更</a>
+        {% endif %}
+        <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('本当に削除しますか？')" class="btn btn-outline-danger" >削除</button>
+        </form>
+        
+        </td>
+        {% endif %}
+    {% endif %}    
+
+    </tr>
+        {% else %}
+    <tr>
+        <td colspan="4">登録されたユーザーはいません。</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

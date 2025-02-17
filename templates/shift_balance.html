@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block head %}<title>{{ year }}年{{ month }}月のシフトバランス</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 10px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+{% endblock %}
+{% block title %} - シフトバランス{% endblock %}
+{% block content %}
+<div class="mt-2  p-2">
+    <h2 class="p-3 bg-light border rounded" style="text-align:center">{{ year }}年{{ month }}月のシフトバランス</h1>
+</div>
+<div>
+    <a href="{{ url_for('shift_balance', year=year, month=month-1) }}">前月</a> |
+    <a href="{{ url_for('shift_balance', year=year, month=month+1) }}">次月</a>
+</div>
+
+<table>
+    <tr>
+        <th>順位</th>
+        <th>名前</th>
+        <th>総稼働時間</th>
+    </tr>
+{% for user in ranking %}
+<tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ user.name }}</td>
+    <td>{{ "%.2f"|format(user.hours) }}</td>
+</tr>
+    {% else %}
+    <tr>
+        <td colspan="3">登録されたシフトはありません。</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+<a href="{{ url_for('index') }}">戻る</a>
+{% endblock %}

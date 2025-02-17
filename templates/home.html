@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block head %}<title>{{ year }}年{{ month }}月のシフト</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 10px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+{% endblock %}
+{% block title %} - ホーム画面{% endblock %}
+{% block content %}
+<div class="mt-2  p-2">
+    <h2 class="p-3 bg-light border rounded" style="text-align:center">あなたが登録した{{ year }}年{{ month }}月のシフト</h1>
+</div>
+<div>
+    <a href="{{ url_for('index', year=year, month=month-1) }}">前月</a> |
+    <a href="{{ url_for('index', year=year, month=month+1) }}">次月</a>
+</div>
+
+<table>
+    <tr>
+        <th>日付</th>
+        <th>開始時間</th>
+        <th>終了時間</th>
+        <th>休憩時間</th>
+    </tr>
+    {% for shift in your_shift %}
+    <tr>
+        <td>{{ shift.start_date }}</td>
+        <td>{{ shift.start_time.strftime('%H:%M') }}</td>
+        <td>{{ shift.end_time.strftime('%H:%M') }}</td>
+        {%if shift.break_time %}
+        <td>{{ shift.break_time }}</td>
+        {% else %}
+        <td>{{0.0}}</td>
+        {% endif %}
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="4">登録されたシフトはありません。</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+{% endblock %}
