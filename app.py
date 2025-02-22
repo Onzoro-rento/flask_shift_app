@@ -137,6 +137,11 @@ def add_shift():
         start_time = datetime.strptime(request.form['start_time'], "%H:%M").time()
         end_time = datetime.strptime(request.form['end_time'], "%H:%M").time()
         break_time = float(request.form['break_time'])
+        existing_shift = Shift.query.filter_by(user_id=current_user.id, start_date=start_date).first()
+        if existing_shift:
+            flash("同じ日にちのシフトが既に存在します。")
+            return redirect(url_for("add_shift", year=year, month=month))
+        
         shift = Shift(start_date = start_date,start_time = start_time,end_time = end_time,user_id = current_user.id,break_time = break_time)
         db.session.add(shift)
         db.session.commit()
@@ -281,6 +286,48 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('member'))
+
+#指定したシフトの削除
+@app.route('/delete_shift/<int:shift_id>',methods = ['POST'])
+@login_required
+def delete_shift(shift_id):
+    shift = Shift.query.filter_by(id = shift_id).first()
+    db.session.delete(shift)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+#指定したシフトを変更
+@app.route('/update_shift/<int:shift_id>',methods = ['GET','POST'])
+@login_required
+def update_shift(shift_id):
+    shift = Shift.query.filter_by(id = shift_id).first()
+    if request.method == 'POST':
+        shift.start_date = datetime.strptime(request.form['start_date'], "%Y-%m-%d").date()
+        shift.start_time = datetime.strptime(request.form['start_time'], "%H:%M").time()
+        shift.end_time = datetime.strptime(request.form['end_time'], "%H:%M").time()
+        shift.break_time = float(request.form['break_time'])
+        # 同じ日にちのシフトが既に存在するかチェック（現在のシフトを除く）
+        existing_shift = Shift.query.filter(Shift.user_id == current_user.id, Shift.start_date == shift.start_date, Shift.id != shift.id).first()
+        if existing_shift:
+            flash("同じ日にちのシフトが既に存在します。")
+            return redirect(url_for("update_shift", shift_id=shift_id))
+        db.session.commit()
+        flash("変更しました")
+        return redirect(url_for("index"))
+    return render_template("update_shift.html",shift = shift)
+#指定したユーザーを一般ユーザーに設定
+@app.route('/update_admin/<int:user_id>',methods = ['GET','POST'])
+@login_required
+def update_admin(user_id):
+    user = User.query.filter_by(id = user_id).first()
+    if user.administrator == "0":
+        flash('指定されたユーザーは一般ユーザーです')
+        return redirect(url_for('member'))
+    else:
+        user.administrator = "0"
+        db.session.commit()
+        flash("指定したユーザーを一般ユーザーにしました")
+        return redirect(url_for('member'))
 
 #指定したユーザーを管理者に設定
 @app.route('/update/<int:user_id>',methods = ['GET','POST'])

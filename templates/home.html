@@ -16,6 +16,26 @@
     th {
         background-color: #f2f2f2;
     }
+    .navigation {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .navigation a {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+    .navigation a:hover {
+        background-color: #0056b3;
+    }
 </style>
 {% endblock %}
 {% block title %} - ホーム画面{% endblock %}
@@ -23,9 +43,9 @@
 <div class="mt-2  p-2">
     <h2 class="p-3 bg-light border rounded" style="text-align:center">あなたが登録した{{ year }}年{{ month }}月のシフト</h1>
 </div>
-<div>
-    <a href="{{ url_for('index', year=year, month=month-1) }}">前月</a> |
-    <a href="{{ url_for('index', year=year, month=month+1) }}">次月</a>
+<div class="navigation" >
+    <a href="{{ url_for('index', year=year, month=month-1) }}"><- 前月</a> |
+    <a href="{{ url_for('index', year=year, month=month+1) }}">次月 -></a>
 </div>
 
 <table>
@@ -34,6 +54,7 @@
         <th>開始時間</th>
         <th>終了時間</th>
         <th>休憩時間</th>
+        <th>操作</th>
     </tr>
     {% for shift in your_shift %}
     <tr>
@@ -45,10 +66,16 @@
         {% else %}
         <td>{{0.0}}</td>
         {% endif %}
+        <td> 
+            <a href="{{ url_for('update_shift', shift_id=shift.id) }}">変更</a>
+            <form action="{{ url_for('delete_shift', shift_id=shift.id) }}" method="post" style="display:inline;">
+            <button type="submit">削除</button>
+            </form>
+        </td>
     </tr>
     {% else %}
     <tr>
-        <td colspan="4">登録されたシフトはありません。</td>
+        <td colspan="5">登録されたシフトはありません。</td>
     </tr>
     {% endfor %}
 </table>

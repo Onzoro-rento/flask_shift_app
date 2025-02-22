@@ -54,9 +54,14 @@
         {% if user.administrator == "0" %}
         <a href="{{url_for('update_user',user_id = user.id)}}" onclick ="return confirm('本当に管理者にしますか？')" class = "btn btn-outline-success me-2">管理者に変更</a>
         {% endif %}
+        {% if user.administrator == "1" %}
+        <a href="{{url_for('update_admin',user_id = user.id)}}" onclick ="return confirm('本当に一般ユーザーにしますか？')" class = "btn btn-outline-primary me-2">一般ユーザーに変更</a>
+        {% endif %}
+        {% if user.id  != current_user.id %}
         <form action="{{ url_for('delete_user', user_id=user.id) }}" method="POST" style="display:inline;">
             <button type="submit" onclick="return confirm('本当に削除しますか？')" class="btn btn-outline-danger" >削除</button>
         </form>
+        {% endif %}
         
         </td>
         {% endif %}

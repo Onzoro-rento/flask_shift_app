@@ -63,8 +63,8 @@
     <tr>
         <td>{{ shift.start_date }}</td>
         <td>{{ shift.user.name}}</td>
-        <td>{{ shift.start_time }}</td>
-        <td>{{ shift.end_time }}</td>
+        <td>{{ shift.start_time.strftime('%H:%M') }}</td>
+        <td>{{ shift.end_time.strftime('%H:%M') }}</td>
         {%if shift.break_time %}
         <td>{{ shift.break_time }}</td>
         {% else %}
